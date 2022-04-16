@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using thegame.Models;
 
 namespace thegame.Domain
@@ -8,7 +9,7 @@ namespace thegame.Domain
     {
         public Guid Id { get; }
         public CellType[,] Field { get; }
-        public List<Vector> Targets { get; }
+        public List<Vector> Targets { get; } = new List<Vector>();
 
         private Vector playerPos;
 
@@ -21,11 +22,11 @@ namespace thegame.Domain
             {
                 for (var y = 0; y < height; y++)
                 {
-                    if (field[x, y] == CellType.Player)
-                    {
+                    var cell = field[x, y];
+                    if (cell == CellType.Player)
                         playerPos = new Vector(x, y);
-                        break;
-                    }
+                    else if (cell == CellType.Target)
+                        Targets.Add(new Vector(x, y));
                 }
             }
         }
@@ -40,11 +41,27 @@ namespace thegame.Domain
                 for (var y = 0; y < height; y++)
                 {
                     var id = x * height + y;
-                    cells.Add(new CellDto(id.ToString(), new VectorDto(x, y), Field[x, y].ToString(), "", 0));
+                    var cellType = Field[x, y];
+                    if (Targets.Contains(new Vector(x, y)))
+                    {
+                        switch (cellType)
+                        {
+                            case CellType.Empty:
+                                cellType = CellType.Target;
+                                break;
+                            case CellType.Box:
+                                cellType = CellType.BoxOnTarget;
+                                break;
+                        }
+                    }
+
+                    cells.Add(new CellDto(id.ToString(), new VectorDto(x, y), cellType.ToCssClass(), "", 0));
                 }
             }
 
-            return new GameDto(cells.ToArray(), true, false, width, height, Id, false, 0);
+            var score = GetScore();
+            var isWin = score == Targets.Count;
+            return new GameDto(cells.ToArray(), true, false, width, height, Id, isWin, score);
         }
 
         public void Move(Vector move)
@@ -85,7 +102,7 @@ namespace thegame.Domain
 
         public int GetScore()
         {
-            return 0;
+            return Targets.Count(vec => Field[vec.X, vec.Y] is CellType.Box or CellType.BoxOnTarget);
         }
 
         public Game Clone()

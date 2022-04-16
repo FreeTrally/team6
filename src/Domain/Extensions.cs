@@ -4,7 +4,7 @@ namespace thegame.Domain
 {
     public static class Extensions
     {
-        public static string ToString(this CellType cellType)
+        public static string ToCssClass(this CellType cellType)
         {
             return cellType switch
             {
