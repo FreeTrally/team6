@@ -10,6 +10,7 @@ namespace thegame.Domain
             {
                 1 => Level1(),
                 2 => Level2(),
+                3 => Level3(),
                 _ => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
             };
         }
@@ -35,6 +36,18 @@ WEWETEWW
 WBENBBTW
 WEEETEEW
 WWWWWWWW";
+            return ParseFromString(str.Split('\n'));
+        }
+
+        public static CellType[,] Level3()
+        {
+            var str = @"WWWWW
+WPEEW
+WEBEW
+WEETW
+WEBEW
+WEETW
+WWWWW";
             return ParseFromString(str.Split('\n'));
         }
 
