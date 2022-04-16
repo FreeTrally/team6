@@ -87,5 +87,10 @@ namespace thegame.Domain
         {
             return 0;
         }
+
+        public Game Clone()
+        {
+            return new Game(Id, (CellType[,])Field.Clone());
+        }
     }
 }

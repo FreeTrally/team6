@@ -24,6 +24,13 @@ namespace thegame.Controllers
             if (game == null)
                 return NotFound();
 
+            if (userInput.KeyPressed == 'R')
+            {
+                game = gamesRepo.FindStartGame(gameId);
+                gamesRepo.ReplaceGame(gameId, game);
+                return Ok(game.ToGameDto());
+            }
+
             var move = Vector.FromChar((char) userInput.KeyPressed);
             game.Move(move);
 
