@@ -7,6 +7,7 @@ namespace thegame.Domain
 {
     public class Game
     {
+        public string Solve { get; set; }
         public Guid Id { get; }
         public CellType[,] Field { get; }
         public List<Vector> Targets { get; } = new List<Vector>();
@@ -108,7 +109,9 @@ namespace thegame.Domain
 
         public Game Clone()
         {
-            return new Game(Id, (CellType[,]) Field.Clone());
+            var ng = new Game(Id, (CellType[,])Field.Clone());
+            ng.Solve = Solve;
+            return ng;
         }
     }
 }

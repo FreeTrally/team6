@@ -10,7 +10,7 @@ namespace thegame.Controllers
     public class MovesController : Controller
     {
         private readonly GamesRepo gamesRepo;
-
+        private static int counter;
         public MovesController(GamesRepo gamesRepo)
         {
             this.gamesRepo = gamesRepo;
@@ -22,6 +22,22 @@ namespace thegame.Controllers
             var game = gamesRepo.FindGameById(gameId);
             if (game == null)
                 return NotFound();
+
+
+
+            if (userInput.KeyPressed == 'I')
+            {
+                userInput.KeyPressed = game.Solve[counter];
+                counter++;
+                if (counter >= game.Solve.Length)
+                {
+                    counter = 0;
+                }
+            }
+            else
+            {
+                counter = 0;
+            }
 
             if (userInput.KeyPressed == 'R')
             {

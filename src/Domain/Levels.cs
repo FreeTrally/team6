@@ -15,6 +15,17 @@ namespace thegame.Domain
             };
         }
 
+        public static string SolveFromInt(int lvl)
+        {
+            return lvl switch
+            {
+                1 => "RSDWDS",
+                2 => "RDWDDSSSSASDAASAAWWSSDDWDDWWWWAAADSDSDSSAASAAWD",
+                3 => "RSSSDWDSWWWASASD",
+                _ => ""
+            };
+        }
+
         public static CellType[,] Level1()
         {
             var str = @"WWWWW

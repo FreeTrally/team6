@@ -20,6 +20,7 @@ namespace thegame.Controllers
         public ActionResult<GameDto> Index(int level)
         {
             var game = new Game(Guid.NewGuid(), Levels.FromInt(level));
+            game.Solve = Levels.SolveFromInt(level);
             gamesRepo.SaveGame(game);
             return Ok(game.ToGameDto());
         }

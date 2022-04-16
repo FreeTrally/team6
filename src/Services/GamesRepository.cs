@@ -11,6 +11,8 @@ namespace thegame.Services
 
         private readonly Dictionary<Guid, Game> start = new();
 
+        private readonly Dictionary<Guid, string> solves = new();
+
         public Game? FindStartGame(Guid id)
         {
             return start[id];
