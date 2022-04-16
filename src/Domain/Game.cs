@@ -25,7 +25,7 @@ namespace thegame.Domain
                     var cell = field[x, y];
                     if (cell == CellType.Player)
                         playerPos = new Vector(x, y);
-                    else if (cell == CellType.Target)
+                    else if (cell is CellType.Target or CellType.BoxOnTarget)
                         Targets.Add(new Vector(x, y));
                 }
             }
