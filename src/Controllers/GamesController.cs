@@ -19,7 +19,7 @@ namespace thegame.Controllers
         [HttpPost]
         public ActionResult<GameDto> Index()
         {
-            var game = new Game(Guid.NewGuid(), Levels.Level1());
+            var game = new Game(Guid.NewGuid(), Levels.Level2());
             gamesRepo.SaveGame(game);
             return Ok(game.ToGameDto());
         }
