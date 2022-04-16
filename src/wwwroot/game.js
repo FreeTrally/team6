@@ -4,11 +4,18 @@ const startgameOverlay = document.getElementsByClassName("start")[0];
 const scoreElement = document.getElementsByClassName("scoreContainer")[0];
 const startButton = document.getElementsByClassName("startButton")[0];
 const pic = document.getElementById("pic");
+const watch = document.getElementById("watching");
 let game = null;
 let currentCells = {};
 let lvl;
+let watching = false;
 
 function handleApiErrors(result) {
+    if (result.status === 404) {
+        alert("Game not found");
+        window.location.replace("/");
+        return;
+    }
     if (!result.ok) {
         alert(`API returned ${result.status} ${result.statusText}. See details in Dev Tools Console`);
         throw result;
@@ -16,10 +23,26 @@ function handleApiErrors(result) {
     return result.json();
 }
 
-async function startGame(level) {
+async function getGame(id) {
+    return await fetch(`/api/games/${id}`, {method: "GET"})
+        .then(handleApiErrors)
+}
+
+async function postGame(level) {
     lvl = level;
-    game = await fetch(`/api/games/${level}`, {method: "POST"})
+    let route = `/api/games/${level}`;
+    if (game)
+        route += `?id=${game.id}`
+
+    game = await fetch(route, {method: "POST"})
         .then(handleApiErrors);
+    await startGame(game);
+}
+
+async function startGame(game) {
+    // lvl = level;
+    // game = await fetch(`/api/games/${level}`, {method: "POST"})
+    //     .then(handleApiErrors);
     window.history.replaceState(game.id, "The Game", "/" + game.id);
     renderField(game);
 }
@@ -66,11 +89,11 @@ function updateField(game) {
     }
     setTimeout(
         () => {
-            if (!game.isFinished)
+            if (!game.isFinished || watching)
                 return;
 
             if (lvl < 3) {
-                startGame(++lvl);
+                postGame(++lvl);
                 return;
             }
 
@@ -154,14 +177,31 @@ function onCellClick(e) {
     makeMove({clickedPos: {x, y}});
 }
 
-function initializePage() {
+async function initializePage() {
+    addResizeListener();
     const gameId = window.location.pathname.substring(1);
     let buttons = document.getElementsByClassName("startButton");
+
+    if (gameId) {
+        game = await getGame(gameId);
+        renderField(game)
+        startgameOverlay.classList.add('hidden');
+        watching = true;
+        watch.classList.remove('hidden');
+
+        setInterval(async () => {
+            game = await getGame(gameId);
+            renderField(game);
+        }, 300);
+        return;
+    }
+
     // use gameId if you want
     for (let button of buttons) {
         button.addEventListener("click", e => {
             startgameOverlay.classList.toggle("hidden", true);
-            startGame(button.getAttribute('level'));
+            postGame(button.getAttribute('level'));
+            // startGame(button.getAttribute('level'));
         });
     }
     //startButton.addEventListener("click", e => {
@@ -169,7 +209,6 @@ function initializePage() {
     //    startGame(level);
     //});
     addKeyboardListener();
-    addResizeListener();
     startButton.focus();
 }
 

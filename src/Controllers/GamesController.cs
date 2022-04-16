@@ -6,7 +6,6 @@ using thegame.Services;
 
 namespace thegame.Controllers
 {
-    [Route("api/games/{level:int}")]
     public class GamesController : Controller
     {
         private readonly GamesRepo gamesRepo;
@@ -16,10 +15,22 @@ namespace thegame.Controllers
             this.gamesRepo = gamesRepo;
         }
 
-        [HttpPost]
-        public ActionResult<GameDto> Index(int level)
+        [Route("api/games/{id:guid}")]
+        [HttpGet]
+        public ActionResult<GameDto> GetGame(Guid id)
         {
-            var game = new Game(Guid.NewGuid(), Levels.FromInt(level));
+            var game = gamesRepo.FindGameById(id);
+            if (game == null)
+                return NotFound();
+
+            return game.ToGameDto();
+        }
+
+        [Route("api/games/{level:int}")]
+        [HttpPost]
+        public ActionResult<GameDto> Index(int level, [FromQuery] Guid? id)
+        {
+            var game = new Game(id ?? Guid.NewGuid(), Levels.FromInt(level));
             game.Solve = Levels.SolveFromInt(level);
             gamesRepo.SaveGame(game);
             return Ok(game.ToGameDto());

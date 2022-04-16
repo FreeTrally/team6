@@ -20,7 +20,7 @@ namespace thegame.Services
 
         public Game? FindGameById(Guid id)
         {
-            return games[id];
+            return games.ContainsKey(id) ? games[id] : null;
         }
 
         public void ReplaceGame(Guid idToReplace, Game game)
