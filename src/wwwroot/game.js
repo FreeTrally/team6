@@ -3,8 +3,10 @@ const startMessage = document.getElementsByClassName("startMessage")[0];
 const startgameOverlay = document.getElementsByClassName("start")[0];
 const scoreElement = document.getElementsByClassName("scoreContainer")[0];
 const startButton = document.getElementsByClassName("startButton")[0];
+const pic = document.getElementById("pic");
 let game = null;
 let currentCells = {};
+let lvl;
 
 function handleApiErrors(result) {
     if (!result.ok) {
@@ -15,7 +17,8 @@ function handleApiErrors(result) {
 }
 
 async function startGame(level) {
-    game = await fetch(`/api/games/${level}`, { method: "POST" })
+    lvl = level;
+    game = await fetch(`/api/games/${level}`, {method: "POST"})
         .then(handleApiErrors);
     window.history.replaceState(game.id, "The Game", "/" + game.id);
     renderField(game);
@@ -25,13 +28,13 @@ function makeMove(userInput) {
     if (!game || game.isFinished) return;
     console.log("send userInput: %o", userInput);
     fetch(`/api/games/${game.id}/moves`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(userInput)
-            })
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userInput)
+        })
         .then(handleApiErrors)
         .then(newGame => {
             game = newGame;
@@ -63,7 +66,16 @@ function updateField(game) {
     }
     setTimeout(
         () => {
+            if (!game.isFinished)
+                return;
+
+            if (lvl < 3) {
+                startGame(++lvl);
+                return;
+            }
+
             startgameOverlay.classList.toggle("hidden", !game.isFinished);
+            pic.classList.toggle("hidden", !game.isFinished);
             startButton.focus();
         },
         300);
@@ -123,7 +135,7 @@ function addKeyboardListener() {
     window.addEventListener("keydown",
         e => {
             if (game && game.monitorKeyboard) {
-                makeMove({ keyPressed: e.keyCode });
+                makeMove({keyPressed: e.keyCode});
                 if (e.keyCode >= 37 && e.keyCode <= 40)
                     e.preventDefault();
             }
@@ -139,7 +151,7 @@ function onCellClick(e) {
     if (!game || !game.monitorMouseClicks) return;
     const x = e.target.dataset.x;
     const y = e.target.dataset.y;
-    makeMove({ clickedPos: { x, y } });
+    makeMove({clickedPos: {x, y}});
 }
 
 function initializePage() {
