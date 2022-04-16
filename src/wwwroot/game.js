@@ -14,8 +14,8 @@ function handleApiErrors(result) {
     return result.json();
 }
 
-async function startGame() {
-    game = await fetch("/api/games", { method: "POST" })
+async function startGame(level) {
+    game = await fetch(`/api/games/${level}`, { method: "POST" })
         .then(handleApiErrors);
     window.history.replaceState(game.id, "The Game", "/" + game.id);
     renderField(game);
@@ -144,11 +144,18 @@ function onCellClick(e) {
 
 function initializePage() {
     const gameId = window.location.pathname.substring(1);
+    let buttons = document.getElementsByClassName("startButton");
     // use gameId if you want
-    startButton.addEventListener("click", e => {
-        startgameOverlay.classList.toggle("hidden", true);
-        startGame();
-    });
+    for (let button of buttons) {
+        button.addEventListener("click", e => {
+            startgameOverlay.classList.toggle("hidden", true);
+            startGame(button.getAttribute('level'));
+        });
+    }
+    //startButton.addEventListener("click", e => {
+    //    startgameOverlay.classList.toggle("hidden", true);
+    //    startGame(level);
+    //});
     addKeyboardListener();
     addResizeListener();
     startButton.focus();

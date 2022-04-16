@@ -6,7 +6,7 @@ using thegame.Services;
 
 namespace thegame.Controllers
 {
-    [Route("api/games")]
+    [Route("api/games/{level:int}")]
     public class GamesController : Controller
     {
         private readonly GamesRepo gamesRepo;
@@ -17,9 +17,9 @@ namespace thegame.Controllers
         }
 
         [HttpPost]
-        public ActionResult<GameDto> Index()
+        public ActionResult<GameDto> Index(int level)
         {
-            var game = new Game(Guid.NewGuid(), Levels.Level3());
+            var game = new Game(Guid.NewGuid(), level == 1 ? Levels.Level2() : Levels.Level3());
             gamesRepo.SaveGame(game);
             return Ok(game.ToGameDto());
         }
