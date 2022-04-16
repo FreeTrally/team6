@@ -15,6 +15,7 @@ namespace thegame.Domain
 
         public Game(Guid id, CellType[,] field)
         {
+            Id = id;
             Field = field;
             var width = Field.GetLength(0);
             var height = Field.GetLength(1);
