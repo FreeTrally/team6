@@ -15,6 +15,30 @@ namespace thegame.Domain
             };
         }
 
+        public static CellType[,] Level2()
+        {
+            var str = @"WWWWW
+WPEEW
+WEBEW
+WEETW
+WWWWW";
+            return ParseFromString(str.Split('\n'));
+        }
+
+        public static CellType[,] Level3()
+        {
+            var str = @"EEWWWWWE
+WWWEEEWE
+WTPBEEWE
+WWWEBTWE
+WTWWBEWE
+WEWETEWW
+WBENBBTW
+WEEETEEW
+WWWWWWWW";
+            return ParseFromString(str.Split('\n'));
+        }
+
         public static CellType[,] ParseFromString(string[] lines)
         {
             var cells = new CellType[lines[0].Length, lines.Length];
@@ -31,16 +55,16 @@ namespace thegame.Domain
 
         public static CellType SwitchFromChar(char c)
         {
-            switch (c)
+            return c switch
             {
-                case 'W': return CellType.Wall;
-                case 'E': return CellType.Empty;
-                case 'P': return CellType.Player;
-                case 'T': return CellType.Target;
-                case 'N': return CellType.BoxOnTarget;
-                case 'B': return CellType.Box;
-                default: return CellType.Empty;
-            }
+                'W' => CellType.Wall,
+                'E' => CellType.Empty,
+                'P' => CellType.Player,
+                'T' => CellType.Target,
+                'N' => CellType.BoxOnTarget,
+                'B' => CellType.Box,
+                _ => CellType.Empty,
+            };
         }
     }
 }
