@@ -4,36 +4,17 @@
     {
         public static Vector FromChar(char input)
         {
-            switch (input)
+            return input switch
             {
-                case 'W':
-                case 'w':
-                {
-                    return new Vector(0, -1);
-                }
-                case 'S':
-                case 's':
-                {
-                    return new Vector(0, 1);
-                }
-                case 'D':
-                case 'd':
-                {
-                    return new Vector(1, 0);
-                }
-                case 'A':
-                case 'a':
-                {
-                    return new Vector(-1, 0);
-                }
-                default:
-                {
-                    return new Vector(0, 0);
-                }
-            }
+                'W' => new Vector(0, -1),
+                'S' => new Vector(0, 1),
+                'D' => new Vector(1, 0),
+                'A' => new Vector(-1, 0),
+                _ => new Vector(0, 0)
+            };
         }
 
         public static Vector operator +(Vector a, Vector b)
-            => new Vector(a.X + b.X, a.Y + b.Y);
+            => new(a.X + b.X, a.Y + b.Y);
     }
 }

@@ -4,13 +4,35 @@ namespace thegame.Domain
 {
     public static class Levels
     {
+        private static string level1 = @"WWWWW
+WPEEW
+WEBEW
+WEETW
+WWWWW";
+        private static string level2 = @"EEWWWWWE
+WWWEEEWE
+WTPBEEWE
+WWWEBTWE
+WTWWBEWE
+WEWETEWW
+WBENBBTW
+WEEETEEW
+WWWWWWWW";
+        private static string level3 = @"WWWWW
+WPEEW
+WEBEW
+WEETW
+WEBEW
+WEETW
+WWWWW";
+
         public static CellType[,] FromInt(int lvl)
         {
             return lvl switch
             {
-                1 => Level1(),
-                2 => Level2(),
-                3 => Level3(),
+                1 => ParseFromString(level1),
+                2 => ParseFromString(level2),
+                3 => ParseFromString(level3),
                 _ => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
             };
         }
@@ -26,43 +48,9 @@ namespace thegame.Domain
             };
         }
 
-        public static CellType[,] Level1()
-        {
-            var str = @"WWWWW
-WPEEW
-WEBEW
-WEETW
-WWWWW";
-            return ParseFromString(str.Split('\n'));
-        }
+        public static CellType[,] ParseFromString(string str) => ParseFromLines(str.Split('\n'));
 
-        public static CellType[,] Level2()
-        {
-            var str = @"EEWWWWWE
-WWWEEEWE
-WTPBEEWE
-WWWEBTWE
-WTWWBEWE
-WEWETEWW
-WBENBBTW
-WEEETEEW
-WWWWWWWW";
-            return ParseFromString(str.Split('\n'));
-        }
-
-        public static CellType[,] Level3()
-        {
-            var str = @"WWWWW
-WPEEW
-WEBEW
-WEETW
-WEBEW
-WEETW
-WWWWW";
-            return ParseFromString(str.Split('\n'));
-        }
-
-        public static CellType[,] ParseFromString(string[] lines)
+        public static CellType[,] ParseFromLines(string[] lines)
         {
             var cells = new CellType[lines[0].Length, lines.Length];
             for (int y = 0; y < lines.Length; y++)
