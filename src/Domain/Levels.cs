@@ -1,21 +1,20 @@
-﻿using System.Linq;
+﻿using System;
 
 namespace thegame.Domain
 {
     public static class Levels
     {
-        public static CellType[,] Level1()
+        public static CellType[,] FromInt(int lvl)
         {
-            return new CellType[,]
+            return lvl switch
             {
-                {CellType.Box, CellType.Box, CellType.Box},
-                {CellType.Box, CellType.Box, CellType.Box},
-                {CellType.Box, CellType.Box, CellType.Box},
-                {CellType.Box, CellType.Box, CellType.Box},
+                1 => Level1(),
+                2 => Level2(),
+                _ => throw new ArgumentOutOfRangeException(nameof(lvl), lvl, null)
             };
         }
 
-        public static CellType[,] Level2()
+        public static CellType[,] Level1()
         {
             var str = @"WWWWW
 WPEEW
@@ -25,7 +24,7 @@ WWWWW";
             return ParseFromString(str.Split('\n'));
         }
 
-        public static CellType[,] Level3()
+        public static CellType[,] Level2()
         {
             var str = @"EEWWWWWE
 WWWEEEWE
