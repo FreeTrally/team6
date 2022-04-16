@@ -81,7 +81,7 @@ namespace thegame.Domain
                 return;
             }
 
-            if (nextCell is CellType.Box)
+            if (nextCell is CellType.Box or CellType.BoxOnTarget)
             {
                 var nextNextPos = nextPos + move;
                 var nextNextCell = Field[nextNextPos.X, nextNextPos.Y];
@@ -107,7 +107,7 @@ namespace thegame.Domain
 
         public Game Clone()
         {
-            return new Game(Id, (CellType[,])Field.Clone());
+            return new Game(Id, (CellType[,]) Field.Clone());
         }
     }
 }
